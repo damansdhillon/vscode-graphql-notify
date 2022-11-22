@@ -56,9 +56,11 @@ const books = [
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   Query: {
     books: () => books,
   },
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   Mutation: {
     addBook: (parent, args) => {
       // Publish event
@@ -68,6 +70,7 @@ const resolvers = {
       return book;
     },
   },
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   Subscription: {
     bookAdded: {
       subscribe: () => {
