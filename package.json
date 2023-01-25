@@ -2,7 +2,7 @@
     "name": "code-extension",
     "displayName": "code-extension",
     "publisher": "damandhillons",
-    "description": "VSCode extension for getting notifications using Apollo GraphQL Subscriptionss",
+    "description": "VSCode extension for getting notifications using Apollo GraphQL Subscriptions",
     "version": "0.0.1",
     "engines": {
         "vscode": "^1.73.0"
