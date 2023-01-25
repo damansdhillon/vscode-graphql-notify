@@ -9,6 +9,7 @@ import express from "express";
 import { PubSub } from "graphql-subscriptions";
 import { useServer } from "graphql-ws/lib/use/ws";
 import http from "http";
+import { v4 as uuid } from "uuid";
 import { WebSocketServer } from "ws";
 
 const pubsub = new PubSub();
@@ -18,10 +19,8 @@ interface MyContext {
 }
 
 const typeDefs = `#graphql
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
   type Book {
+    id: ID!
     title: String
     author: String
   }
@@ -34,27 +33,21 @@ const typeDefs = `#graphql
   # Mutations
   type Mutation {
     addBook(title: String!, author: String!): Book
+    updateBook(id: ID!,  book: UpdateBook!): Book
   }
 
   # Subscriptions
   type Subscription {
     bookAdded: Book
   }
+
+  input UpdateBook {
+    title: String!
+  }
 `;
 
-const books = [
-  {
-    title: "The Awakening",
-    author: "Kate Chopin",
-  },
-  {
-    title: "City of Glass",
-    author: "Paul Auster",
-  },
-];
+const books = [];
 
-// Resolvers define how to fetch the types defined in your schema.
-// This resolver retrieves books from the "books" array above.
 const resolvers = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Query: {
@@ -63,10 +56,32 @@ const resolvers = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Mutation: {
     addBook: (parent, args) => {
+      const id = uuid();
       // Publish event
       pubsub.publish("BOOK_ADDED", { bookAdded: args });
-      const book = { title: args.title, author: args.author };
+      const book = { id: id, title: args.title, author: args.author };
+
+      // Check if the book already exists
+      const bookExists = books.find(
+        (b) => b.title === book.title && b.author === book.author
+      );
+
+      if (bookExists) {
+        return bookExists;
+      }
+
       books.push(book);
+      return book;
+    },
+    updateBook: (parent, args) => {
+      const book = books.find((b) => b.id === args.id);
+
+      if (!book) {
+        throw new Error("Book not found");
+      }
+
+      book.title = args.book.title;
+
       return book;
     },
   },
