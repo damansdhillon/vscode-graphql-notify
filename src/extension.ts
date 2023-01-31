@@ -14,12 +14,10 @@ import { Subscription } from "zen-observable-ts";
 import WebSocket = require("ws");
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log(
-    'Congratulations, your extension "code-extension" is now active!'
-  );
+  console.log('Congratulations, your extension "code-extension" is now active');
   vscode.window.showInformationMessage("Welcome to Code Extension!");
 
-  // launch background task to show hello world message
+  // launch background task to show hello world messages
   const task = vscode.tasks.registerTaskProvider("code-extension", {
     provideTasks: () => {
       const task = new vscode.Task(
@@ -48,7 +46,8 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showErrorMessage("No existing subscription");
         return;
       }
-      // Get the subscription from the workspaceState
+
+      // Get the subscription from the somethign asdjfhgajs
       context.workspaceState
         .get<any>("subscription")
         .then((subscription: Subscription) => {
