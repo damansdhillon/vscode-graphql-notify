@@ -17,7 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "code-extension" is now active');
   vscode.window.showInformationMessage("Welcome to Code Extension!");
 
-  // launch background task to show hello world messagess
+  // launch background task to show hello world messages
   const task = vscode.tasks.registerTaskProvider("code-extension", {
     provideTasks: () => {
       const task = new vscode.Task(
